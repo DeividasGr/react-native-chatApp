@@ -5,16 +5,16 @@ import FormInput from '../components/FormInput';
 import {Title} from 'react-native-paper';
 import {AuthContext} from '../navigation/AuthProvider';
 
-function ProfileScreen({navigation}) {
+function ProfileScreen() {
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const {user, editUserProfile} = useContext(AuthContext);
 
   const handleUserInfoEdit = (email, password) => {
-    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
     if (password.length === 0) {
-      if (reg.test(email) === false) {
+      if (emailValidationRegex.test(email) === false) {
         setErrorMessage('Correct email pattern is required');
         return false;
       } else {

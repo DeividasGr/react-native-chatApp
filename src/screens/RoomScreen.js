@@ -1,13 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  FlatList,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
+import {View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {IconButton} from 'react-native-paper';
 import Messages from '../components/Messages';
+import FormInput from '../components/FormInput';
 
 function RoomScreen() {
   const [message, setMessage] = useState('');
@@ -25,9 +20,11 @@ function RoomScreen() {
     setChatList([...data]);
   }, [data]);
 
-  const random = Math.floor(Math.random() * responses.length);
-  const answer = responses[random];
+  const giveRandomNumber = Math.floor(Math.random() * responses.length);
+  //answer: randomizes answers from responses array
+  const answer = responses[giveRandomNumber];
 
+  //fetches all questions from jsonbin.io
   const fetchQuestions = async () => {
     try {
       const response = await fetch(
@@ -46,6 +43,7 @@ function RoomScreen() {
     }
   };
 
+  //updates current data array with new values;
   const payload = JSON.stringify([...data, {question: message, answer}]);
 
   const updateQuestionList = async () => {
@@ -69,6 +67,7 @@ function RoomScreen() {
     }
   };
 
+  //fetches answers array from jsonbin.io
   const getAnswers = async () => {
     try {
       const response = await fetch(
@@ -87,7 +86,7 @@ function RoomScreen() {
     }
   };
 
-  const onSendMessage = () => {
+  const handleSendMessage = () => {
     updateQuestionList();
     setChatList(reversedData);
     setMessage('');
@@ -96,7 +95,7 @@ function RoomScreen() {
   return (
     <View>
       <FlatList
-        style={{height: '87%', bottom: '3%'}}
+        style={styles.flatListStyle}
         inverted={true}
         keyExtractor={(_, index) => index.toString()}
         data={chatList}
@@ -105,20 +104,17 @@ function RoomScreen() {
         )}
       />
       <View style={styles.typeMsgContainer}>
-        <TextInput
-          style={styles.typeMsgBox}
+        <FormInput
+          label="Enter your text here..."
           value={message}
-          placeholder="Type Here ..."
+          style={styles.typeMsgBox}
           onChangeText={val => setMessage(val)}
         />
         <TouchableOpacity
-          style={[
-            styles.sendBtn,
-            {backgroundColor: message ? 'orange' : 'grey'},
-          ]}
+          style={[styles.sendBtn, message ? styles.orangeBck : styles.greyBck]}
           disabled={message ? false : true}
-          onPress={() => onSendMessage()}>
-          <Text style={styles.sendTxt}>send</Text>
+          onPress={() => handleSendMessage()}>
+          <IconButton icon="send" size={28} color="#fff" />
         </TouchableOpacity>
       </View>
     </View>
@@ -131,23 +127,31 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
     bottom: 5,
   },
-
+  flatListStyle: {
+    height: '87%',
+    bottom: '3%',
+  },
   typeMsgBox: {
     borderWidth: 0.8,
     borderColor: 'grey',
-    padding: 10,
     width: '80%',
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },
-
   sendBtn: {
     width: '20%',
     alignItems: 'center',
     justifyContent: 'center',
+    borderTopRightRadius: 10,
+    borderBottomRightRadius: 10,
   },
-
   sendTxt: {color: 'white'},
+  orangeBck: {
+    backgroundColor: '#6646ee',
+  },
+  greyBck: {
+    backgroundColor: 'grey',
+  },
 });
 
 export default RoomScreen;

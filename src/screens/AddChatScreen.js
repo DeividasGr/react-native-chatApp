@@ -13,14 +13,14 @@ function AddRoomScreen({navigation}) {
   };
 
   const fetchList = useCallback(() => {
-    getChatList();
+    getAllChatLists();
   }, []);
 
   useEffect(() => {
     fetchList();
   }, [fetchList]);
 
-  const getChatList = async () => {
+  const getAllChatLists = async () => {
     try {
       let response = await fetch(
         'https://api.jsonbin.io/v3/b/609bba991a02f86e1f0a612e/latest',
