@@ -14,7 +14,7 @@ function RoomScreen() {
   const [responses, setAnswer] = useState([]);
   const [chatList, setChatList] = useState([]);
   const [data, setData] = useState([]);
-  console.log(data);
+  const reversedData = data.reverse();
 
   useEffect(() => {
     fetchQuestions();
@@ -22,15 +22,8 @@ function RoomScreen() {
   }, []);
 
   useEffect(() => {
-    const initialQuestion = data[0];
-    setChatList([
-      ...data,
-      {
-        question: initialQuestion?.question || null,
-        answer: initialQuestion?.answer,
-      },
-    ]);
-  }, [data, message]);
+    setChatList([...data]);
+  }, [data]);
 
   const random = Math.floor(Math.random() * responses.length);
   const answer = responses[random];
@@ -38,16 +31,16 @@ function RoomScreen() {
   const fetchQuestions = async () => {
     try {
       const response = await fetch(
-        'https://api.jsonbin.io/b/609aea891a02f86e1f09b773',
+        'https://api.jsonbin.io/v3/b/609bd089e0aabd6e191cea85',
         {
           headers: {
             'X-Master-Key':
-              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
           },
         },
       );
       const json = await response.json();
-      setData(json);
+      setData(json.record);
     } catch (error) {
       console.error(error);
     }
@@ -58,19 +51,19 @@ function RoomScreen() {
   const updateQuestionList = async () => {
     try {
       const response = await fetch(
-        'https://api.jsonbin.io/b/609aea891a02f86e1f09b773',
+        'https://api.jsonbin.io/v3/b/609bd089e0aabd6e191cea85',
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             'X-Master-Key':
-              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
           },
           body: payload,
         },
       );
       const json = await response.json();
-      setData(json.data);
+      setData(json.record);
     } catch (error) {
       console.log(error);
     }
@@ -79,16 +72,16 @@ function RoomScreen() {
   const getAnswers = async () => {
     try {
       const response = await fetch(
-        'https://api.jsonbin.io/b/609aea0c6e36c66e53613564',
+        'https://api.jsonbin.io/v3/b/609bd036e0aabd6e191cea1d',
         {
           headers: {
             'X-Master-Key':
-              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
           },
         },
       );
       const json = await response.json();
-      setAnswer(json);
+      setAnswer(json.record);
     } catch (error) {
       console.log(error);
     }
@@ -96,7 +89,7 @@ function RoomScreen() {
 
   const onSendMessage = () => {
     updateQuestionList();
-    setChatList(data.reverse());
+    setChatList(reversedData);
     setMessage('');
   };
 

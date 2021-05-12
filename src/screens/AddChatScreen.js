@@ -23,11 +23,11 @@ function AddRoomScreen({navigation}) {
   const getChatList = async () => {
     try {
       let response = await fetch(
-        'https://api.jsonbin.io/v3/b/609aea29e0aabd6e191c18fe',
+        'https://api.jsonbin.io/v3/b/609bba991a02f86e1f0a612e',
         {
           headers: {
             'X-Master-Key':
-              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
           },
         },
       );
@@ -43,13 +43,13 @@ function AddRoomScreen({navigation}) {
   const updateChatRoomList = async () => {
     try {
       const response = await fetch(
-        'https://api.jsonbin.io/v3/b/609aea29e0aabd6e191c18fe',
+        'https://api.jsonbin.io/v3/b/609bba991a02f86e1f0a612e',
         {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
             'X-Master-Key':
-              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
           },
           body: payload,
         },

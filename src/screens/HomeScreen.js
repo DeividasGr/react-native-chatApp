@@ -1,22 +1,26 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import FormButton from '../components/FormButton';
 
 function HomeScreen({navigation}) {
   const [chatListData, setChatListData] = useState([]);
 
-  useEffect(() => {
+  const fetchList = useCallback(() => {
     getChatList();
-  }, [chatListData]);
+  }, []);
+
+  useEffect(() => {
+    fetchList();
+  }, [fetchList]);
 
   const getChatList = async () => {
     try {
       const response = await fetch(
-        'https://api.jsonbin.io/v3/b/609aea29e0aabd6e191c18fe',
+        'https://api.jsonbin.io/v3/b/609bba991a02f86e1f0a612e',
         {
           headers: {
             'X-Master-Key':
-              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
           },
         },
       );
