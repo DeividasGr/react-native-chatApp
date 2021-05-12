@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {IconButton, Title} from 'react-native-paper';
 import FormInput from '../components/FormInput';
@@ -6,29 +6,65 @@ import FormButton from '../components/FormButton';
 
 function AddRoomScreen({navigation}) {
   const [chatName, setChatName] = useState('');
+  const [chatList, setChatList] = useState([]);
 
-  //  const config = {
-  //    method: 'POST',
-  //    headers: {
-  //      'X-Collection-Name': 'THREAD',
-  //      'X-Master-Key':
-  //        '$2b$10$8RHzIQysv7vAABNOmRgDZe0Hlu8krfvcUql0qPlCBLndTUPh.0F4e',
-  //    },
-  //  };
+  const id = () => {
+    return Math.floor(Math.random() * 99999);
+  };
 
-  const handleButtonPress = () => {
+  const fetchList = useCallback(() => {
+    getChatList();
+  }, []);
+
+  useEffect(() => {
+    fetchList();
+  }, [fetchList]);
+
+  const getChatList = async () => {
     try {
-      fetch('https://api.jsonbin.io/v3/c/6098dbf61a02f86e1f074167/meta/name', {
-        method: 'PUT',
-        headers: {
-          'X-Master-Key':
-            '$2b$10$8RHzIQysv7vAABNOmRgDZe0Hlu8krfvcUql0qPlCBLndTUPh.0F4e',
-          'X-Collection-Name': 'THREAD',
+      let response = await fetch(
+        'https://api.jsonbin.io/v3/b/609aea29e0aabd6e191c18fe',
+        {
+          headers: {
+            'X-Master-Key':
+              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+          },
         },
-      });
+      );
+      let json = await response.json();
+      setChatList(json.record);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const payload = JSON.stringify([...chatList, {userName: chatName, id: id()}]);
+
+  const updateChatRoomList = async () => {
+    try {
+      const response = await fetch(
+        'https://api.jsonbin.io/v3/b/609aea29e0aabd6e191c18fe',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key':
+              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+          },
+          body: payload,
+        },
+      );
+      const json = await response.json();
+      setChatList(json.record);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleChatRoomAddition = () => {
+    updateChatRoomList();
+    navigation.navigate('Home');
+    setChatName('');
   };
 
   return (
@@ -53,7 +89,7 @@ function AddRoomScreen({navigation}) {
           title="Create"
           modeValue="contained"
           labelStyle={styles.buttonLabel}
-          onPress={handleButtonPress}
+          onPress={() => handleChatRoomAddition()}
           disabled={chatName.length === 0}
         />
       </View>

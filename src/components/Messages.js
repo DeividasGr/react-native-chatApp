@@ -1,19 +1,19 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-const Messages = ({incomingMsg, sentMsg, msg}) => {
+const Messages = ({question, answer}) => {
   return (
     <View>
-      {incomingMsg && (
+      {answer ? (
         <View style={styles.incomingMsgBox}>
-          <Text style={styles.incomingMsgText}>{msg}</Text>
+          <Text style={styles.incomingMsgText}>{answer}</Text>
         </View>
-      )}
-      {sentMsg && (
+      ) : null}
+      {question ? (
         <Text style={styles.sentMsgBox}>
-          <Text style={styles.sentMsgText}>{msg}</Text>
+          <Text style={styles.sentMsgText}>{question}</Text>
         </Text>
-      )}
+      ) : null}
     </View>
   );
 };

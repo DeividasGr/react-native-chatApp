@@ -1,34 +1,27 @@
 import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
+import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
 import FormButton from '../components/FormButton';
 
 function HomeScreen({navigation}) {
-  const [data, setData] = useState([]);
+  const [chatListData, setChatListData] = useState([]);
 
   useEffect(() => {
-    getMoviesFromApiAsync();
-  }, []);
+    getChatList();
+  }, [chatListData]);
 
-  const getMoviesFromApiAsync = async () => {
+  const getChatList = async () => {
     try {
-      let response = await fetch(
-        'https://api.jsonbin.io/v3/b/6098055b7a19ef1245a63d17/3',
+      const response = await fetch(
+        'https://api.jsonbin.io/v3/b/609aea29e0aabd6e191c18fe',
         {
           headers: {
             'X-Master-Key':
-              '$2b$10$8RHzIQysv7vAABNOmRgDZe0Hlu8krfvcUql0qPlCBLndTUPh.0F4e',
+              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
           },
         },
       );
-      let json = await response.json();
-      setData(json.record);
+      const json = await response.json();
+      setChatListData(json.record);
     } catch (error) {
       console.error(error);
     }
@@ -37,7 +30,7 @@ function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={data}
+        data={chatListData}
         keyExtractor={item => item.id}
         renderItem={({item}) => {
           return (
@@ -46,7 +39,7 @@ function HomeScreen({navigation}) {
               style={styles.cardStyle}>
               <View style={styles.userInfo}>
                 <View style={styles.imageWrapper}>
-                  <Image style={styles.imageStyle} source={{uri: item.image}} />
+                  <Text style={styles.imageStyle}>{item.userName[0]}</Text>
                 </View>
                 <View style={styles.textSectionStyle}>
                   <View style={styles.userText}>
@@ -78,9 +71,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   imageStyle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    fontSize: 25,
+    color: '#fff',
   },
   cardStyle: {
     width: '100%',
@@ -91,6 +83,13 @@ const styles = StyleSheet.create({
   },
   imageWrapper: {
     paddingVertical: 15,
+    marginTop: 20,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: '#c787f1',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   textSectionStyle: {
     flexDirection: 'column',

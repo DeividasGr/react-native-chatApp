@@ -7,67 +7,96 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import Msg from '../components/Messages';
-// import {data} from '../data/data';
-
-let chats = [];
-console.log(chats);
+import Messages from '../components/Messages';
 
 function RoomScreen() {
   const [message, setMessage] = useState('');
+  const [responses, setAnswer] = useState([]);
   const [chatList, setChatList] = useState([]);
-  console.log(chatList);
   const [data, setData] = useState([]);
+  console.log(data);
 
   useEffect(() => {
     fetchQuestions();
+    getAnswers();
   }, []);
 
   useEffect(() => {
-    const initialQuestion = data[0]?.answer;
-    setChatList([...chats, {msg: initialQuestion, incomingMsg: true}]);
-  }, [data]);
+    const initialQuestion = data[0];
+    setChatList([
+      ...data,
+      {
+        question: initialQuestion?.question || null,
+        answer: initialQuestion?.answer,
+      },
+    ]);
+  }, [data, message]);
+
+  const random = Math.floor(Math.random() * responses.length);
+  const answer = responses[random];
 
   const fetchQuestions = async () => {
     try {
-      let response = await fetch(
-        'https://api.jsonbin.io/v3/b/609993b96e36c66e535fab26',
+      const response = await fetch(
+        'https://api.jsonbin.io/b/609aea891a02f86e1f09b773',
         {
           headers: {
             'X-Master-Key':
-              '$2b$10$8RHzIQysv7vAABNOmRgDZe0Hlu8krfvcUql0qPlCBLndTUPh.0F4e',
+              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
           },
         },
       );
-      let json = await response.json();
-      setData(json.record);
+      const json = await response.json();
+      setData(json);
     } catch (error) {
       console.error(error);
     }
   };
 
-  const getAnswer = qst => {
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].question.includes(qst.toLowerCase())) {
-        chats = [...chats, {msg: data[i].answer, incomingMsg: true}];
-        setChatList([...chats].reverse());
-        return;
-      }
+  const payload = JSON.stringify([...data, {question: message, answer}]);
+
+  const updateQuestionList = async () => {
+    try {
+      const response = await fetch(
+        'https://api.jsonbin.io/b/609aea891a02f86e1f09b773',
+        {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Master-Key':
+              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+          },
+          body: payload,
+        },
+      );
+      const json = await response.json();
+      setData(json.data);
+    } catch (error) {
+      console.log(error);
     }
-    chats = [
-      ...chats,
-      {msg: "Didn't recognise your question", incomingMsg: true},
-    ];
-    setChatList([...chats].reverse());
-    return;
+  };
+
+  const getAnswers = async () => {
+    try {
+      const response = await fetch(
+        'https://api.jsonbin.io/b/609aea0c6e36c66e53613564',
+        {
+          headers: {
+            'X-Master-Key':
+              '$2b$10$9PRj4Srm4jEJgJsV/mhQDeCFqGjCnTp5s848K0rdYzE/mtCMyFamC',
+          },
+        },
+      );
+      const json = await response.json();
+      setAnswer(json);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const onSendMessage = () => {
-    chats = [...chats, {msg: message, sentMsg: true}];
-    setChatList([...chats].reverse());
-    setTimeout(() => {
-      getAnswer(message);
-    }, 1000);
+    updateQuestionList();
+    setChatList(data.reverse());
     setMessage('');
   };
 
@@ -79,11 +108,7 @@ function RoomScreen() {
         keyExtractor={(_, index) => index.toString()}
         data={chatList}
         renderItem={({item}) => (
-          <Msg
-            incomingMsg={item.incomingMsg}
-            msg={item.msg}
-            sentMsg={item.sentMsg}
-          />
+          <Messages question={item.question} answer={item.answer} />
         )}
       />
       <View style={styles.typeMsgContainer}>
@@ -133,78 +158,3 @@ const styles = StyleSheet.create({
 });
 
 export default RoomScreen;
-
-// import {GiftedChat, Bubble, Send} from 'react-native-gifted-chat';
-// import {IconButton} from 'react-native-paper';
-
-// function RoomScreen({navigation, route}) {
-//   const [messages, setMessages] = useState([
-//     {
-//       _id: 1,
-//       text: 'hello',
-//       createdAt: new Date().getTime(),
-//       user: {
-//         _id: 2,
-//         name: route.params.thread.userName,
-//       },
-//     },
-//   ]);
-
-//   // helper method that is sends a message
-//   function handleSend(newMessage = []) {
-//     setMessages(GiftedChat.append(messages, newMessage));
-//   }
-
-//   function renderBubble(props) {
-//     return (
-//       <Bubble
-//         {...props}
-//         wrapperStyle={{
-//           right: {
-//             backgroundColor: '#6646ee',
-//           },
-//         }}
-//         textStyle={{
-//           right: {
-//             color: '#fff',
-//           },
-//         }}
-//       />
-//     );
-//   }
-
-//   function renderSend(props) {
-//     return (
-//       <Send {...props}>
-//         <View style={styles.sendingContainer}>
-//           <IconButton icon="send-circle" size={32} color="#6646ee" />
-//         </View>
-//       </Send>
-//     );
-//   }
-
-//   return (
-//     <GiftedChat
-//       messages={messages}
-//       onSend={newMessage => handleSend(newMessage)}
-//       user={{_id: 1}}
-//       renderBubble={renderBubble}
-//       alwaysShowSend
-//       renderSend={renderSend}
-//       scrollToBottom
-//     />
-//   );
-// }
-
-// const styles = StyleSheet.create({
-//   sendingContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-//   bottomComponentContainer: {
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//   },
-// });
-
-// export default RoomScreen;

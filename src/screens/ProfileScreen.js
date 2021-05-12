@@ -5,7 +5,7 @@ import FormInput from '../components/FormInput';
 import {Title} from 'react-native-paper';
 import {AuthContext} from '../navigation/AuthProvider';
 
-function ProfileScreen() {
+function ProfileScreen({navigation}) {
   const [newEmail, setNewEmail] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');

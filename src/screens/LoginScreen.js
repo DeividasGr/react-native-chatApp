@@ -6,10 +6,10 @@ import FormButton from '../components/FormButton';
 import {AuthContext} from '../navigation/AuthProvider';
 
 function LoginScreen() {
-  const {login} = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [validationMessage, setValidationMessage] = useState('');
+  const {login} = useContext(AuthContext);
 
   const handleLoginForm = () => {
     const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
