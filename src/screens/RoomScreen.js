@@ -31,7 +31,7 @@ function RoomScreen() {
   const fetchQuestions = async () => {
     try {
       const response = await fetch(
-        'https://api.jsonbin.io/v3/b/609bd089e0aabd6e191cea85',
+        'https://api.jsonbin.io/v3/b/609bd089e0aabd6e191cea85/latest',
         {
           headers: {
             'X-Master-Key':
