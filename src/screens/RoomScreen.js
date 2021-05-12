@@ -93,8 +93,9 @@ function RoomScreen() {
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         style={styles.flatListStyle}
         inverted={true}
         keyExtractor={(_, index) => index.toString()}
@@ -122,6 +123,9 @@ function RoomScreen() {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    paddingVertical: 30,
+  },
   typeMsgContainer: {
     flexDirection: 'row',
     marginHorizontal: 5,

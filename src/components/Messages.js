@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   sentMsgBox: {
-    backgroundColor: 'green',
+    backgroundColor: '#6646ee',
     maxWidth: '70%',
     borderRadius: 10,
     padding: 5,
