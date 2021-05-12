@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import {View, Text, StyleSheet, FlatList, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, FlatList} from 'react-native';
 import FormButton from '../components/FormButton';
+import ChatList from '../components/ChatList';
 
 function HomeScreen({navigation}) {
   const [chatListData, setChatListData] = useState([]);
@@ -34,27 +35,11 @@ function HomeScreen({navigation}) {
   return (
     <View style={styles.container}>
       <FlatList
+        showsVerticalScrollIndicator={false}
         data={chatListData}
         keyExtractor={item => item.id}
         renderItem={({item}) => {
-          return (
-            <TouchableOpacity
-              onPress={() => navigation.navigate('Room', {thread: item})}
-              style={styles.cardStyle}>
-              <View style={styles.userInfo}>
-                <View style={styles.imageWrapper}>
-                  <Text style={styles.imageStyle}>{item.userName[0]}</Text>
-                </View>
-                <View style={styles.textSectionStyle}>
-                  <View style={styles.userText}>
-                    <Text style={styles.usernameStyle}>{item.userName}</Text>
-                    <Text style={styles.timeStyle}>{item.messageTime}</Text>
-                  </View>
-                  <Text style={styles.messageStyle}>{item.messageText}</Text>
-                </View>
-              </View>
-            </TouchableOpacity>
-          );
+          return <ChatList item={item} navigation={navigation} />;
         }}
       />
       <FormButton
@@ -73,56 +58,6 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     alignItems: 'center',
     backgroundColor: '#fff',
-  },
-  imageStyle: {
-    fontSize: 25,
-    color: '#fff',
-  },
-  cardStyle: {
-    width: '100%',
-  },
-  userInfo: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  imageWrapper: {
-    paddingVertical: 15,
-    marginTop: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#c787f1',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textSectionStyle: {
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: 15,
-    paddingLeft: 15,
-    marginLeft: 15,
-    width: 290,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
-  },
-  userText: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 5,
-  },
-  usernameStyle: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    fontFamily: 'Lato-Regular',
-  },
-  timeStyle: {
-    fontSize: 12,
-    color: '#666',
-    fontFamily: 'Lato-Regular',
-  },
-  messageStyle: {
-    fontSize: 14,
-    color: '#333',
   },
 });
 

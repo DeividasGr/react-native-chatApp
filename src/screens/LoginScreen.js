@@ -12,11 +12,11 @@ function LoginScreen() {
   const {login} = useContext(AuthContext);
 
   const handleLoginForm = () => {
-    const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    const emailValidationRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
 
     if (email === '' || password === '') {
       setValidationMessage('Input fields cannot be empty');
-    } else if (reg.test(email) === false) {
+    } else if (emailValidationRegex.test(email) === false) {
       setValidationMessage('Correct email pattern is required');
       return false;
     } else {

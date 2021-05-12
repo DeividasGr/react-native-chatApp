@@ -19,6 +19,10 @@ function FormButton({title, modeValue, ...rest}) {
 const styles = StyleSheet.create({
   button: {
     marginTop: 10,
+    marginBottom: 10,
+  },
+  buttonMb: {
+    margin: 10,
   },
   buttonContainer: {
     width: width / 2,
