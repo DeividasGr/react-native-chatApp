@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {Avatar} from 'react-native-paper';
 
 function ChatList({item, navigation}) {
   return (
@@ -8,7 +9,7 @@ function ChatList({item, navigation}) {
       style={styles.cardStyle}>
       <View style={styles.userInfo}>
         <View style={styles.imageWrapper}>
-          <Text style={styles.imageStyle}>{item.userName[0]}</Text>
+          <Avatar.Text size={64} label={item.userName[0]} />
         </View>
         <View style={styles.textSectionStyle}>
           <View style={styles.userText}>
@@ -23,10 +24,6 @@ function ChatList({item, navigation}) {
 }
 
 const styles = StyleSheet.create({
-  imageStyle: {
-    fontSize: 25,
-    color: '#fff',
-  },
   cardStyle: {
     width: '100%',
   },
@@ -37,10 +34,6 @@ const styles = StyleSheet.create({
   imageWrapper: {
     paddingVertical: 15,
     marginTop: 20,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#c787f1',
     justifyContent: 'center',
     alignItems: 'center',
   },

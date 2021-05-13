@@ -1,50 +1,41 @@
 import React, {useState, useEffect} from 'react';
-import {View, FlatList, TouchableOpacity, StyleSheet} from 'react-native';
+import {
+  View,
+  FlatList,
+  TouchableOpacity,
+  StyleSheet,
+  ActivityIndicator,
+} from 'react-native';
 import {IconButton} from 'react-native-paper';
 import Messages from '../components/Messages';
 import FormInput from '../components/FormInput';
+import useFetch from '../hooks/useFetch';
 
 function RoomScreen() {
   const [message, setMessage] = useState('');
-  const [responses, setAnswer] = useState([]);
   const [chatList, setChatList] = useState([]);
-  const [data, setData] = useState([]);
-  const reversedData = data.reverse();
+  const reversedData = chatList.reverse();
+
+  const fetchQuestions = useFetch(
+    'https://api.jsonbin.io/v3/b/609bd089e0aabd6e191cea85/latest',
+    '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
+  );
+  console.log(fetchQuestions);
+  const getAnswers = useFetch(
+    'https://api.jsonbin.io/v3/b/609bd036e0aabd6e191cea1d',
+    '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
+  );
 
   useEffect(() => {
-    fetchQuestions();
-    getAnswers();
-  }, []);
+    setChatList([...fetchQuestions]);
+  }, [fetchQuestions]);
 
-  useEffect(() => {
-    setChatList([...data]);
-  }, [data]);
-
-  const giveRandomNumber = Math.floor(Math.random() * responses.length);
+  const giveRandomNumber = Math.floor(Math.random() * getAnswers.length);
   //answer: randomizes answers from responses array
-  const answer = responses[giveRandomNumber];
-
-  //fetches all questions from jsonbin.io
-  const fetchQuestions = async () => {
-    try {
-      const response = await fetch(
-        'https://api.jsonbin.io/v3/b/609bd089e0aabd6e191cea85/latest',
-        {
-          headers: {
-            'X-Master-Key':
-              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
-          },
-        },
-      );
-      const json = await response.json();
-      setData(json.record);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const answer = getAnswers[giveRandomNumber];
 
   //updates current data array with new values;
-  const payload = JSON.stringify([...data, {question: message, answer}]);
+  const payload = JSON.stringify([...chatList, {question: message, answer}]);
 
   const updateQuestionList = async () => {
     try {
@@ -61,26 +52,8 @@ function RoomScreen() {
         },
       );
       const json = await response.json();
-      setData(json.record);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  //fetches answers array from jsonbin.io
-  const getAnswers = async () => {
-    try {
-      const response = await fetch(
-        'https://api.jsonbin.io/v3/b/609bd036e0aabd6e191cea1d',
-        {
-          headers: {
-            'X-Master-Key':
-              '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
-          },
-        },
-      );
-      const json = await response.json();
-      setAnswer(json.record);
+      console.log(json);
+      setChatList(json.record);
     } catch (error) {
       console.log(error);
     }
@@ -88,22 +61,29 @@ function RoomScreen() {
 
   const handleSendMessage = () => {
     updateQuestionList();
-    setChatList(reversedData);
     setMessage('');
   };
 
   return (
     <View style={styles.container}>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        style={styles.flatListStyle}
-        inverted={true}
-        keyExtractor={(_, index) => index.toString()}
-        data={chatList}
-        renderItem={({item}) => (
-          <Messages question={item.question} answer={item.answer} />
-        )}
-      />
+      {fetchQuestions.length === 0 ? (
+        <ActivityIndicator
+          style={styles.activityContainer}
+          size="large"
+          color="#6646ee"
+        />
+      ) : (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          style={styles.flatListStyle}
+          keyExtractor={(_, index) => index.toString()}
+          data={reversedData}
+          inverted
+          renderItem={({item}) => (
+            <Messages question={item.question} answer={item.answer} />
+          )}
+        />
+      )}
       <View style={styles.typeMsgContainer}>
         <FormInput
           label="Enter your text here..."
@@ -124,7 +104,11 @@ function RoomScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 30,
+    paddingTop: 30,
+    backgroundColor: '#fff',
+  },
+  activityContainer: {
+    marginVertical: 255,
   },
   typeMsgContainer: {
     flexDirection: 'row',
@@ -138,6 +122,7 @@ const styles = StyleSheet.create({
   typeMsgBox: {
     borderWidth: 0.8,
     borderColor: 'grey',
+    backgroundColor: '#fff',
     width: '80%',
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,

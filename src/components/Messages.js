@@ -20,7 +20,7 @@ const Messages = ({question, answer}) => {
 
 const styles = StyleSheet.create({
   incomingMsgBox: {
-    backgroundColor: 'white',
+    backgroundColor: '#e4e2e2',
     maxWidth: '70%',
     borderRadius: 10,
     padding: 5,
@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     borderColor: 'grey',
   },
   incomingMsgText: {
-    color: 'black',
+    color: '#333',
     fontSize: 16,
   },
   sentMsgBox: {
