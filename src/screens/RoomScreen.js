@@ -20,7 +20,7 @@ function RoomScreen() {
     'https://api.jsonbin.io/v3/b/609bd089e0aabd6e191cea85/latest',
     '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
   );
-  console.log(fetchQuestions);
+
   const getAnswers = useFetch(
     'https://api.jsonbin.io/v3/b/609bd036e0aabd6e191cea1d',
     '$2b$10$.llxzf5K1Vn5fqFajCg.WugkRDVYwNu0gCKwm5KGq7BPqXgdCdRfG',
@@ -52,7 +52,6 @@ function RoomScreen() {
         },
       );
       const json = await response.json();
-      console.log(json);
       setChatList(json.record);
     } catch (error) {
       console.log(error);
